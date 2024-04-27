@@ -1,0 +1,158 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.9
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Feb 26, 2024 at 02:59 PM
+-- Server version: 5.5.8
+-- PHP Version: 5.3.5
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `moviebooking`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movies`
+--
+
+CREATE TABLE IF NOT EXISTS `movies` (
+  `M_id` varchar(10) NOT NULL,
+  `M_name` varchar(30) NOT NULL,
+  `Language` varchar(30) NOT NULL,
+  PRIMARY KEY (`M_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `movies`
+--
+
+INSERT INTO `movies` (`M_id`, `M_name`, `Language`) VALUES
+('1', 'Manjummel Boys', 'Malayalam'),
+('2', 'Deadpool & Wolverine', 'English'),
+('3', 'Bramayugam', 'Malayalam');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reservedseats`
+--
+
+CREATE TABLE IF NOT EXISTS `reservedseats` (
+  `Rs_id` varchar(10) NOT NULL,
+  `T_id` varchar(10) NOT NULL,
+  `S_id` varchar(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  KEY `T_id` (`T_id`),
+  KEY `S_id` (`S_id`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reservedseats`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `showtime`
+--
+
+CREATE TABLE IF NOT EXISTS `showtime` (
+  `S_id` varchar(10) NOT NULL,
+  `M_id` varchar(10) NOT NULL,
+  `T_id` varchar(10) NOT NULL,
+  `Date` date NOT NULL,
+  `Time` time NOT NULL,
+  `Tnos` int(10) NOT NULL,
+  `As` int(10) NOT NULL,
+  PRIMARY KEY (`S_id`),
+  KEY `M_id` (`M_id`),
+  KEY `T_id` (`T_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `showtime`
+--
+
+INSERT INTO `showtime` (`S_id`, `M_id`, `T_id`, `Date`, `Time`, `Tnos`, `As`) VALUES
+('1', '1', '1', '2024-02-25', '12:30:00', 30, 24),
+('2', '2', '2', '2024-02-25', '03:30:00', 30, 30),
+('3', '3', '3', '2024-02-25', '10:00:00', 30, 30),
+('4', '1', '4', '2024-02-25', '10:30:00', 30, 25);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `theater`
+--
+
+CREATE TABLE IF NOT EXISTS `theater` (
+  `T_id` varchar(10) NOT NULL,
+  `T_name` varchar(30) NOT NULL,
+  `Location` varchar(30) NOT NULL,
+  `Nos` int(10) NOT NULL,
+  PRIMARY KEY (`T_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `theater`
+--
+
+INSERT INTO `theater` (`T_id`, `T_name`, `Location`, `Nos`) VALUES
+('1', 'Vanitha-Veneetha Cineplex', 'Edappally', 30),
+('2', 'Sridar Cinemas', 'Marine Drive', 30),
+('3', 'Kavitha Theatre', 'Ernakulam', 30),
+('4', 'Shenoys Cinema', 'Ernakulam', 30);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userreg`
+--
+
+CREATE TABLE IF NOT EXISTS `userreg` (
+  `uid` int(10) NOT NULL AUTO_INCREMENT,
+  `uname` varchar(20) NOT NULL,
+  `phno` int(11) NOT NULL,
+  `Password` varchar(20) NOT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `userreg`
+--
+
+INSERT INTO `userreg` (`uid`, `uname`, `phno`, `Password`) VALUES
+(1, 'sarath', 4676785, '123'),
+(2, 'ss', 878786787, '456'),
+(3, 'sarannya', 757575734, 'sarannya123');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `reservedseats`
+--
+ALTER TABLE `reservedseats`
+  ADD CONSTRAINT `fk_reservedseats_S_id` FOREIGN KEY (`S_id`) REFERENCES `showtime` (`S_id`),
+  ADD CONSTRAINT `fk_reservedseats_T_id` FOREIGN KEY (`T_id`) REFERENCES `theater` (`T_id`),
+  ADD CONSTRAINT `fk_reservedseats_uid` FOREIGN KEY (`uid`) REFERENCES `userreg` (`uid`);
+
+--
+-- Constraints for table `showtime`
+--
+ALTER TABLE `showtime`
+  ADD CONSTRAINT `M_id` FOREIGN KEY (`M_id`) REFERENCES `movies` (`M_id`),
+  ADD CONSTRAINT `T_id` FOREIGN KEY (`T_id`) REFERENCES `theater` (`T_id`);
